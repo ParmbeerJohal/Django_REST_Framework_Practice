@@ -19,6 +19,21 @@ class ProductSerializer(serializers.ModelSerializer):
         max_digits=None,
         decimal_places=2,
     )
+    sale_start = serializers.DateTimeField(
+        input_formats=['%I:%M %p %d %B %Y'],
+        format=None,
+        allow_null=True,
+        help_text='Accepted format is "12:01 PM 16 April 2020"',
+        style={'input_type': 'text', 'placeholder':'HH:MM AM/PM DD Month YYYY'},
+    )
+    sale_end = serializers.DateTimeField(
+        input_formats=['%I:%M %p %d %B %Y'],
+        format=None,
+        allow_null=True,
+        help_text='Accepted format is "12:01 PM 16 April 2020"',
+        style={'input_type': 'text', 'placeholder':'HH:MM AM/PM DD Month YYYY'},
+    )
+
     class Meta:
         model = Product
         fields = (
