@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/v1/products/', api_views.ProductList.as_view()),
     path('api/v1/products/create/', api_views.ProductCreate.as_view()),
     path('api/v1/products/<int:id>/', api_views.ProductRetrieveUpdateDestroy.as_view()),
+    path('api/v1/products/<int:id>/stats/',api_views.ProductStats.as_view()),
 
     path('admin/', admin.site.urls),
     path('products/<int:id>/', views.show, name='show-product'),
