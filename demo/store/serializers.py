@@ -20,6 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
         decimal_places=2,
     )
     sale_start = serializers.DateTimeField(
+        required=False,
         input_formats=['%I:%M %p %d %B %Y'],
         format=None,
         allow_null=True,
@@ -27,12 +28,15 @@ class ProductSerializer(serializers.ModelSerializer):
         style={'input_type': 'text', 'placeholder':'HH:MM AM/PM DD Month YYYY'},
     )
     sale_end = serializers.DateTimeField(
+        required=False,
         input_formats=['%I:%M %p %d %B %Y'],
         format=None,
         allow_null=True,
         help_text='Accepted format is "12:01 PM 16 April 2020"',
         style={'input_type': 'text', 'placeholder':'HH:MM AM/PM DD Month YYYY'},
     )
+    photo = serializers.ImageField(default=None)
+    warranty = serializers.FileField(write_only=True, default=None)
 
     class Meta:
         model = Product
@@ -46,10 +50,24 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_on_sale',
             'current_price',
             'cart_items',
+            'photo',
+            'warranty',
         )
     def get_cart_items(self, instance):
         items = ShoppingCartItem.objects.filter(product=instance)
         return CartItemSerializer(items, many=True).data
+
+    def update(self, instance, validated_data):
+        if validated_data.get('warranty', None):
+            instance.description += '\n\Wanrranty Information:\n'
+            instance.description += b'; '.join(
+                validated_data['warranty'].readlines()
+            ).decode()
+        return instance
+
+    def create(self, validated_data):
+        validated_data.pop('warranty')
+        return Product.objects.create(**validated_data)
 
 class ProductStatSerializer(serializers.Serializer):
     stats = serializers.DictField(
