@@ -1,5 +1,6 @@
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, \
+    RetrieveUpdateDestroyAPIView, GenericAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
@@ -32,7 +33,6 @@ class ProductList(ListAPIView):
                 sale_start__lte=now,
                 sale_end__gte=now,
             )
-
         return queryset
 
 class ProductCreate(CreateAPIView):
@@ -70,7 +70,7 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
                 'description': product['description'],
                 'price': product['price'],
             })
-        return
+        return response
 
 class ProductStats(GenericAPIView):
     lookup_field = 'id'
